@@ -1,0 +1,56 @@
+.page { min-height: 100vh; background: #f5f0e8; }
+.loading { min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #5a4a3a; }
+
+.content { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 1.8rem; }
+
+.hero { display: flex; align-items: center; gap: 1.2rem; }
+.avatar {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: #5a4a3a; color: #f5f0e8;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.username { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #3a2e22; }
+.sub { font-size: 0.85rem; color: #9a8a7a; margin-top: 0.2rem; }
+
+.statsGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+.stat {
+  background: #fff8ee; border: 1.5px solid #e0d0b8; border-radius: 14px;
+  padding: 1.1rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+  box-shadow: 0 2px 8px rgba(90,74,58,0.06);
+}
+.statValue { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #3a2e22; line-height: 1; }
+.statLabel { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: #9a8a7a; text-align: center; }
+
+.sectionTitle { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #3a2e22; }
+.empty { color: #9a8a7a; font-size: 0.9rem; }
+
+.historyTable { display: flex; flex-direction: column; gap: 0; border: 1.5px solid #e0d0b8; border-radius: 14px; overflow: hidden; background: #fff8ee; }
+
+.tableHeader {
+  display: grid; grid-template-columns: 1.8fr 1fr 1fr 1.2fr 1.3fr;
+  padding: 0.65rem 1rem; background: #f0e8d8;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: #9a8a7a; font-weight: 600;
+}
+
+.tableRow {
+  display: grid; grid-template-columns: 1.8fr 1fr 1fr 1.2fr 1.3fr;
+  padding: 0.75rem 1rem; align-items: center;
+  border-top: 1px solid #ede4d4; font-size: 0.85rem; color: #5a4a3a;
+  transition: background 0.1s;
+}
+.tableRow:hover { background: #fdf5ec; }
+
+.levelCol { display: flex; align-items: center; gap: 0.5rem; }
+.levelNum { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: #3a2e22; }
+.levelName { font-size: 0.72rem; color: #9a8a7a; }
+
+.scoreCol { display: flex; }
+.scoreBadge { font-size: 0.78rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 6px; }
+.scoreBadgePass { background: #eaf5ef; color: #3a7d5a; }
+.scoreBadgeFail { background: #faeaea; color: #b84040; }
+
+.passText { color: #3a7d5a; font-weight: 600; font-size: 0.82rem; }
+.failText { color: #b84040; font-weight: 600; font-size: 0.82rem; }
+.dateCol { color: #9a8a7a; font-size: 0.78rem; }

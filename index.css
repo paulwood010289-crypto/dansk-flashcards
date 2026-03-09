@@ -1,0 +1,23 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #f5f0e8;
+  --warm-brown: #5a4a3a;
+  --accent: #5a4a3a;
+  font-family: 'Source Sans 3', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--cream);
+  color: var(--warm-brown);
+}
+
+button { font-family: inherit; cursor: pointer; }
+
+a { color: inherit; text-decoration: none; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #c8b89a; border-radius: 3px; }

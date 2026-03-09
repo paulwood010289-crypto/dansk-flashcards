@@ -1,0 +1,31 @@
+.page { min-height: 100vh; background: #f5f0e8; }
+.loading, .empty { padding: 2rem; color: #9a8a7a; font-size: 0.9rem; }
+
+.content { max-width: 640px; margin: 0 auto; padding: 2rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 1.8rem; }
+
+.header { text-align: center; }
+.title { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #3a2e22; }
+.sub { font-size: 0.85rem; color: #9a8a7a; margin-top: 0.4rem; }
+
+.table { background: #fff8ee; border: 1.5px solid #e0d0b8; border-radius: 16px; overflow: hidden; }
+
+.tableHeader {
+  display: grid; grid-template-columns: 0.6fr 2fr 1.5fr 1.5fr 1.2fr;
+  padding: 0.65rem 1.1rem; background: #f0e8d8;
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: #9a8a7a; font-weight: 600;
+}
+
+.tableRow {
+  display: grid; grid-template-columns: 0.6fr 2fr 1.5fr 1.5fr 1.2fr;
+  padding: 0.85rem 1.1rem; align-items: center;
+  border-top: 1px solid #ede4d4; font-size: 0.88rem; color: #5a4a3a;
+  transition: background 0.1s;
+}
+.tableRow:hover { background: #fdf5ec; }
+.myRow { background: #fdf5e8; }
+
+.rank { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: #3a2e22; }
+.player { display: flex; align-items: center; gap: 0.4rem; font-weight: 600; color: #3a2e22; }
+.youBadge { font-size: 0.62rem; background: #5a4a3a; color: #f5f0e8; padding: 0.1rem 0.4rem; border-radius: 10px; letter-spacing: 0.08em; font-weight: 700; }
+.level { font-weight: 600; color: #5a4a3a; }
+.score { font-family: 'Playfair Display', serif; font-weight: 700; color: #3a7d5a; }

@@ -1,0 +1,67 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.5rem;
+  background: rgba(245,240,232,0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e0d0b8;
+  gap: 1rem;
+}
+
+.brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #3a2e22;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.links {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.88rem;
+  letter-spacing: 0.06em;
+}
+
+.links a {
+  color: #9a8a7a;
+  transition: color 0.15s;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.links a:hover, .active {
+  color: #5a4a3a !important;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  white-space: nowrap;
+}
+
+.username {
+  font-size: 0.82rem;
+  color: #7a6a5a;
+  font-weight: 600;
+}
+
+.signOut {
+  font-size: 0.75rem;
+  color: #9a8a7a;
+  background: none;
+  border: 1px solid #ddd0c0;
+  border-radius: 6px;
+  padding: 0.3rem 0.65rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.signOut:hover { background: #ede4d4; }
