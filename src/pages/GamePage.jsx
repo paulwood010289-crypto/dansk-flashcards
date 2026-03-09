@@ -1,9 +1,3 @@
-GamePage — timer uses ref to avoid re-renders, choices pre-generated per card
-Fixed GamePage — timer uses ref to avoid re-renders, choices pre-generated per card
-
-Fixed GamePage — timer uses ref to avoid re-renders, choices pre-generated per card
-javascript
-
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Nav from '../components/Nav'
