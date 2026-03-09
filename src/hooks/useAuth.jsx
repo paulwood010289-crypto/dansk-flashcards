@@ -9,14 +9,12 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
       if (session?.user) fetchProfile(session.user.id)
       else setLoading(false)
     })
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
       if (session?.user) fetchProfile(session.user.id)
@@ -56,7 +54,6 @@ export function AuthProvider({ children }) {
       .single()
     if (error) throw error
     setProfile(data)
-    // Also initialise progress row
     await supabase.from('user_progress').upsert({
       user_id: user.id,
       highest_level: 1,
