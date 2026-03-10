@@ -4,6 +4,7 @@ import Nav from '../components/Nav'
 import CardRenderer from '../components/game/CardRenderer'
 import LevelSelect from '../components/game/LevelSelect'
 import LevelOverlay from '../components/game/LevelOverlay'
+import DanishFlagBackground from '../components/game/DanishFlagBackground'
 import { useAuth } from '../hooks/useAuth'
 import { useProgress } from '../hooks/useProgress'
 import { LEVELS } from '../data/levels'
@@ -18,6 +19,7 @@ export default function GamePage() {
   const navigate = useNavigate()
 
   const [levelIdx, setLevelIdx] = useState(null)
+  const [roundKey, setRoundKey] = useState(1)
   const [deck, setDeck] = useState([])
   const [cardIdx, setCardIdx] = useState(0)
   const [answered, setAnswered] = useState(false)
@@ -53,6 +55,7 @@ export default function GamePage() {
       ? deck.map(card => ({ ...card, _choices: generateChoices(card, LEVELS[idx].optionCount) }))
       : buildDeck(idx)
     setLevelIdx(idx)
+    setRoundKey(k => k + 1)
     setDeck(newDeck)
     setCardIdx(0)
     setPipResults([])
@@ -64,6 +67,14 @@ export default function GamePage() {
   }
 
   const theme = TIER_THEMES[levelIdx !== null ? LEVELS[levelIdx].tier - 1 : 0]
+  const themeStyle = {
+    '--accent': theme.accent,
+    '--card': theme.card,
+    '--border': theme.border,
+    '--light': theme.light,
+    '--hover': theme.hover,
+    '--lvl-bg': theme.bg,
+  }
   const entry = deck[cardIdx]
   const optCount = levelIdx !== null ? LEVELS[levelIdx].optionCount : 4
 
@@ -114,7 +125,8 @@ export default function GamePage() {
 
   if (levelIdx === null) {
     return (
-      <div className={styles.pageWrapper}>
+      <div className={styles.pageWrapper} style={themeStyle}>
+        <DanishFlagBackground theme={theme} seed={roundKey} />
         <Nav />
         <LevelSelect progress={progress} onSelect={idx => startLevel(idx)} />
       </div>
@@ -125,7 +137,8 @@ export default function GamePage() {
   const pct = Math.round((cardIdx / 10) * 100)
 
   return (
-    <div className={styles.pageWrapper} style={{ '--accent': theme.accent, '--card': theme.card, '--border': theme.border, '--light': theme.light, '--hover': theme.hover }}>
+    <div className={styles.pageWrapper} style={themeStyle}>
+      <DanishFlagBackground theme={theme} seed={roundKey} />
       <Nav />
       {overlay && (
         <LevelOverlay

@@ -15,6 +15,8 @@
 }
 
 .gameArea {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -314,7 +316,7 @@
 .overlayBtnSecondary:hover { background: #ede4d4; }
 
 /* Level select */
-.levelSelectPage { padding: 2.5rem 1.5rem 4rem; max-width: 680px; margin: 0 auto; }
+.levelSelectPage { position: relative; z-index: 1; padding: 2.5rem 1.5rem 4rem; max-width: 680px; margin: 0 auto; }
 .levelSelectHeader { margin-bottom: 2rem; text-align: center; }
 .levelSelectTitle { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #3a2e22; }
 .levelSelectSub { font-size: 0.88rem; color: #9a8a7a; margin-top: 0.4rem; }
