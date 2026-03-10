@@ -13,7 +13,6 @@ export default function CardRenderer({ entry, optCount, answered, result, seqPla
           <Badge label="Translate" color="brown" />
           <p className={styles.cardLabel}>Danish → English</p>
           <p className={styles.wordBig}>{entry.danish}</p>
-          {entry.hint && <p className={styles.hint}>{entry.hint}</p>}
         </div>
         <Choices choices={entry._choices} correct={entry.english} answered={answered} result={result} theme={theme} optCount={optCount}
           onChoose={c => onMultipleChoice(c, entry.english)} />
@@ -28,7 +27,6 @@ export default function CardRenderer({ entry, optCount, answered, result, seqPla
           <Badge label="Translate" color="brown" />
           <p className={styles.cardLabel}>Danish → English</p>
           <p className={[styles.wordBig, styles.wordPhrase].join(' ')}>{entry.danish}</p>
-          {entry.hint && <p className={styles.hint}>{entry.hint}</p>}
         </div>
         <Choices choices={entry._choices} correct={entry.english} answered={answered} result={result} theme={theme} optCount={optCount} useGrid={optCount >= 6}
           onChoose={c => onMultipleChoice(c, entry.english)} />
@@ -48,7 +46,6 @@ export default function CardRenderer({ entry, optCount, answered, result, seqPla
               ? <span key={i} className={styles.blank} style={{ borderColor: theme.accent }}>_</span>
               : c)}
           </p>
-          <p className={styles.hint}>"{entry.english}" in Danish</p>
         </div>
         <Choices choices={choices} correct={hidden} answered={answered} result={result} theme={theme} optCount={optCount}
           onChoose={c => onMultipleChoice(c, hidden)} />
@@ -66,7 +63,6 @@ export default function CardRenderer({ entry, optCount, answered, result, seqPla
           <p className={styles.sentence}>
             {parts[0]}<span className={styles.blank} style={{ borderColor: theme.accent }}>___</span>{parts[1] || ''}
           </p>
-          {entry.hint && <p className={styles.hint}>{entry.hint}</p>}
         </div>
         <Choices choices={entry._choices} correct={entry.blank} answered={answered} result={result} theme={theme} optCount={optCount} useGrid={optCount >= 6}
           onChoose={c => onMultipleChoice(c, entry.blank)} />
