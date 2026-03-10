@@ -1,18 +1,9 @@
 import Nav from '../components/Nav'
 import { useAuth } from '../hooks/useAuth'
 import { useProgress } from '../hooks/useProgress'
+import { formatTime, formatDate } from '../utils/format'
 import styles from './ProfilePage.module.css'
 import { LEVELS } from '../data/levels'
-
-function formatTime(s) {
-  if (!s) return '—'
-  const m = Math.floor(s / 60), sec = s % 60
-  return `${m}:${sec.toString().padStart(2,'0')}`
-}
-
-function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
-}
 
 export default function ProfilePage() {
   const { profile } = useAuth()
