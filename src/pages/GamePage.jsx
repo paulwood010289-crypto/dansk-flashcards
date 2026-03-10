@@ -7,18 +7,24 @@ import LevelOverlay from '../components/game/LevelOverlay'
 import GateChallenge from '../components/game/GateChallenge'
 import Fireworks from '../components/game/Fireworks'
 import DanishFlagBackground from '../components/game/DanishFlagBackground'
+import SpanishFlagBackground from '../components/game/SpanishFlagBackground'
 import { useAuth } from '../hooks/useAuth'
+import { useLanguage } from '../context/LanguageContext'
 import { useProgress } from '../hooks/useProgress'
-import { LEVELS, LEVEL_GATES } from '../data/levels'
+import { LEVELS } from '../data/levels'
+import { LEVELS_ES } from '../data/levels_es'
 import { TIER_THEMES } from '../data/themes'
-import { buildDeck, generateChoices } from '../utils/game'
+import { buildDeck, generateChoices, getLevelData } from '../utils/game'
 import { formatTime } from '../utils/format'
 import styles from './GamePage.module.css'
 
 export default function GamePage() {
   const { profile } = useAuth()
-  const { progress, saveRoundResult, isGatePassed, markGatePassed, loading: progressLoading } = useProgress()
+  const { language } = useLanguage()
+  const { progress, saveRoundResult, loading: progressLoading } = useProgress(language)
   const navigate = useNavigate()
+
+  const ACTIVE_LEVELS = language === 'spanish' ? LEVELS_ES : LEVELS
 
   const [levelIdx, setLevelIdx] = useState(null)
   const [roundKey, setRoundKey] = useState(1)
@@ -58,8 +64,8 @@ export default function GamePage() {
 
   function startLevel(idx, reshuffle = false) {
     const newDeck = reshuffle
-      ? deck.map(card => ({ ...card, _choices: generateChoices(card, LEVELS[idx].optionCount) }))
-      : buildDeck(idx)
+      ? deck.map(card => ({ ...card, _choices: generateChoices(card, ACTIVE_LEVELS[idx].optionCount) }))
+      : buildDeck(idx, language)
     setLevelIdx(idx)
     setRoundKey(k => k + 1)
     setDeck(newDeck)
@@ -74,7 +80,7 @@ export default function GamePage() {
     startTimer()
   }
 
-  const theme = TIER_THEMES[levelIdx !== null ? LEVELS[levelIdx].tier - 1 : 0]
+  const theme = TIER_THEMES[levelIdx !== null ? ACTIVE_LEVELS[levelIdx].tier - 1 : 0]
   const themeStyle = {
     '--accent': theme.accent,
     '--card': theme.card,
@@ -84,7 +90,7 @@ export default function GamePage() {
     '--lvl-bg': theme.bg,
   }
   const entry = deck[cardIdx]
-  const optCount = levelIdx !== null ? LEVELS[levelIdx].optionCount : 4
+  const optCount = levelIdx !== null ? ACTIVE_LEVELS[levelIdx].optionCount : 4
 
   function registerAnswer(correct) {
     setAnswered(true)
@@ -129,42 +135,14 @@ export default function GamePage() {
     }
   }
 
-  // Called when user clicks "Next Level" from round overlay
-  function handleOverlayNext() {
-    const isLast = levelIdx >= LEVELS.length - 1
-    if (isLast) {
-      // Last level — no gate, go to profile
-      navigate('/profile')
-      return
-    }
-    if (isGatePassed(levelIdx)) {
-      // Gate already done — advance directly
-      startLevel(levelIdx + 1)
-    } else {
-      // Show gate challenge
-      setOverlay(null)
-      setShowGate(true)
-    }
-  }
-
-  // Called when gate challenge is passed
-  async function handleGatePass() {
-    setShowGate(false)
-    setGateUnlocked(true)
-    await markGatePassed(levelIdx)
-    // Auto-dismiss fireworks after 3.5 s then go to next level
-    setTimeout(() => {
-      setGateUnlocked(false)
-      startLevel(levelIdx + 1)
-    }, 3500)
-  }
+  const FlagBackground = language === 'spanish' ? SpanishFlagBackground : DanishFlagBackground
 
   if (progressLoading) return <div className={styles.loading}>Loading…</div>
 
   if (levelIdx === null) {
     return (
       <div className={styles.pageWrapper} style={themeStyle}>
-        <DanishFlagBackground theme={theme} seed={roundKey} />
+        <FlagBackground theme={theme} seed={roundKey} />
         <Nav />
         <LevelSelect
           progress={progress}
@@ -175,13 +153,13 @@ export default function GamePage() {
     )
   }
 
-  const level = LEVELS[levelIdx]
+  const level = ACTIVE_LEVELS[levelIdx]
   const pct = Math.round((cardIdx / 10) * 100)
   const isLastLevel = levelIdx >= LEVELS.length - 1
 
   return (
     <div className={styles.pageWrapper} style={themeStyle}>
-      <DanishFlagBackground theme={theme} seed={roundKey} />
+      <FlagBackground theme={theme} seed={roundKey} />
       <Nav />
 
       {/* Fireworks celebration after gate pass */}
@@ -217,9 +195,8 @@ export default function GamePage() {
         <LevelOverlay
           overlay={overlay}
           levelIdx={levelIdx}
-          totalLevels={LEVELS.length}
-          gateNeeded={overlay.passed && !isLastLevel && !isGatePassed(levelIdx)}
-          onNext={handleOverlayNext}
+          totalLevels={ACTIVE_LEVELS.length}
+          onNext={() => startLevel(levelIdx + 1)}
           onRetry={() => startLevel(levelIdx, true)}
           onSelect={() => { setLevelIdx(null); stopTimer() }}
           onProfile={() => navigate('/profile')}

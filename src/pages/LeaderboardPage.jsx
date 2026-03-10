@@ -1,11 +1,15 @@
 import Nav from '../components/Nav'
 import { useAuth } from '../hooks/useAuth'
+import { useLanguage } from '../context/LanguageContext'
 import { useLeaderboard } from '../hooks/useLeaderboard'
 import styles from './LeaderboardPage.module.css'
 
 export default function LeaderboardPage() {
   const { profile } = useAuth()
-  const { rows, loading } = useLeaderboard()
+  const { language } = useLanguage()
+  const { rows, loading } = useLeaderboard(language)
+
+  const langLabel = language === 'spanish' ? '🇪🇸 Spanish' : '🇩🇰 Danish'
 
   return (
     <div className={styles.page}>
@@ -13,7 +17,7 @@ export default function LeaderboardPage() {
       <div className={styles.content}>
         <div className={styles.header}>
           <h1 className={styles.title}>Leaderboard</h1>
-          <p className={styles.sub}>Ranked by highest level reached, then average score</p>
+          <p className={styles.sub}>{langLabel} · Ranked by highest level reached, then average score</p>
         </div>
 
         {loading ? (
