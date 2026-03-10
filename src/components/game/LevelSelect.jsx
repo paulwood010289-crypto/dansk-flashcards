@@ -2,22 +2,21 @@ import { LEVELS } from '../../data/levels'
 import { TIER_THEMES } from '../../data/themes'
 import styles from '../../pages/GamePage.module.css'
 
-export default function LevelSelect({ progress, isGatePassed, onSelect }) {
+export default function LevelSelect({ progress, activeLevels = LEVELS, isGatePassed, onSelect }) {
   const highestUnlocked = progress?.highest_level ?? 1
   return (
     <div className={styles.levelSelectPage}>
       <div className={styles.levelSelectHeader}>
         <h1 className={styles.levelSelectTitle}>Choose a Level</h1>
-        <p className={styles.levelSelectSub}>You've unlocked {highestUnlocked} of {LEVELS.length} levels</p>
+        <p className={styles.levelSelectSub}>You've unlocked {highestUnlocked} of {activeLevels.length} levels</p>
       </div>
       <div className={styles.levelGrid}>
-        {LEVELS.map((level, i) => {
+        {activeLevels.map((level, i) => {
           const num = i + 1
           const unlocked = num <= highestUnlocked
           const isCurrent = num === (progress?.current_level ?? 1)
           const theme = TIER_THEMES[level.tier - 1]
-          // Show gate key indicator when level is unlocked but gate to next level is pending
-          const gatePending = unlocked && i < LEVELS.length - 1 && !isGatePassed?.(i)
+          const gatePending = unlocked && i < activeLevels.length - 1 && !isGatePassed?.(i)
           return (
             <button key={i}
               className={[styles.levelCard, !unlocked ? styles.levelCardLocked : '', isCurrent ? styles.levelCardCurrent : ''].join(' ')}

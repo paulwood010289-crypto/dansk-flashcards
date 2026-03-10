@@ -11,7 +11,7 @@ import SpanishFlagBackground from '../components/game/SpanishFlagBackground'
 import { useAuth } from '../hooks/useAuth'
 import { useLanguage } from '../context/LanguageContext'
 import { useProgress } from '../hooks/useProgress'
-import { LEVELS } from '../data/levels'
+import { LEVELS, LEVEL_GATES } from '../data/levels'
 import { LEVELS_ES } from '../data/levels_es'
 import { TIER_THEMES } from '../data/themes'
 import { buildDeck, generateChoices, getLevelData } from '../utils/game'
@@ -21,7 +21,7 @@ import styles from './GamePage.module.css'
 export default function GamePage() {
   const { profile } = useAuth()
   const { language } = useLanguage()
-  const { progress, saveRoundResult, loading: progressLoading } = useProgress(language)
+  const { progress, saveRoundResult, isGatePassed, markGatePassed, loading: progressLoading } = useProgress(language)
   const navigate = useNavigate()
 
   const ACTIVE_LEVELS = language === 'spanish' ? LEVELS_ES : LEVELS
@@ -38,7 +38,7 @@ export default function GamePage() {
 
   // Gate state
   const [showGate, setShowGate] = useState(false)
-  const [gateUnlocked, setGateUnlocked] = useState(false) // fireworks after gate pass
+  const [gateUnlocked, setGateUnlocked] = useState(false)
 
   // Timer — uses ref so ticking never causes re-render
   const [displayTime, setDisplayTime] = useState('0:00')
@@ -135,9 +135,39 @@ export default function GamePage() {
     }
   }
 
+  // Called when user clicks "Next Level" from round overlay
+  function handleOverlayNext() {
+    const isLast = levelIdx >= ACTIVE_LEVELS.length - 1
+    if (isLast) {
+      navigate('/profile')
+      return
+    }
+    if (language === 'danish' && !isGatePassed(levelIdx)) {
+      // Danish: show gate challenge before advancing
+      setOverlay(null)
+      setShowGate(true)
+    } else {
+      // Spanish (no gates) or gate already passed: advance directly
+      startLevel(levelIdx + 1)
+    }
+  }
+
+  // Called when gate challenge is passed
+  async function handleGatePass() {
+    setShowGate(false)
+    setGateUnlocked(true)
+    await markGatePassed(levelIdx)
+    setTimeout(() => {
+      setGateUnlocked(false)
+      startLevel(levelIdx + 1)
+    }, 3500)
+  }
+
   const FlagBackground = language === 'spanish' ? SpanishFlagBackground : DanishFlagBackground
 
   if (progressLoading) return <div className={styles.loading}>Loading…</div>
+
+  const isLastLevel = levelIdx !== null && levelIdx >= ACTIVE_LEVELS.length - 1
 
   if (levelIdx === null) {
     return (
@@ -146,7 +176,8 @@ export default function GamePage() {
         <Nav />
         <LevelSelect
           progress={progress}
-          isGatePassed={isGatePassed}
+          activeLevels={ACTIVE_LEVELS}
+          isGatePassed={language === 'danish' ? isGatePassed : undefined}
           onSelect={idx => startLevel(idx)}
         />
       </div>
@@ -155,7 +186,6 @@ export default function GamePage() {
 
   const level = ACTIVE_LEVELS[levelIdx]
   const pct = Math.round((cardIdx / 10) * 100)
-  const isLastLevel = levelIdx >= LEVELS.length - 1
 
   return (
     <div className={styles.pageWrapper} style={themeStyle}>
@@ -179,7 +209,7 @@ export default function GamePage() {
         </>
       )}
 
-      {/* Gate challenge */}
+      {/* Gate challenge — Danish only */}
       {showGate && LEVEL_GATES[levelIdx] && (
         <GateChallenge
           gate={LEVEL_GATES[levelIdx]}
@@ -196,7 +226,8 @@ export default function GamePage() {
           overlay={overlay}
           levelIdx={levelIdx}
           totalLevels={ACTIVE_LEVELS.length}
-          onNext={() => startLevel(levelIdx + 1)}
+          gateNeeded={overlay.passed && !isLastLevel && language === 'danish' && !isGatePassed(levelIdx)}
+          onNext={handleOverlayNext}
           onRetry={() => startLevel(levelIdx, true)}
           onSelect={() => { setLevelIdx(null); stopTimer() }}
           onProfile={() => navigate('/profile')}
