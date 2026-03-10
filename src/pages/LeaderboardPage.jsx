@@ -1,20 +1,11 @@
-import { useEffect, useState } from 'react'
 import Nav from '../components/Nav'
-import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
+import { useLeaderboard } from '../hooks/useLeaderboard'
 import styles from './LeaderboardPage.module.css'
 
 export default function LeaderboardPage() {
   const { profile } = useAuth()
-  const [rows, setRows] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    supabase.from('leaderboard').select('*').limit(50).then(({ data }) => {
-      setRows(data ?? [])
-      setLoading(false)
-    })
-  }, [])
+  const { rows, loading } = useLeaderboard()
 
   return (
     <div className={styles.page}>

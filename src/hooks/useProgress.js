@@ -56,11 +56,9 @@ export function useProgress() {
   }
 
   async function setCurrentLevel(level) {
-    const { data } = await supabase
+    await supabase
       .from('user_progress')
       .upsert({ user_id: user.id, current_level: level, updated_at: new Date().toISOString() })
-      .select()
-      .single()
     setProgress(prev => ({ ...prev, current_level: level }))
   }
 
