@@ -1,7 +1,7 @@
 import { formatTime } from '../../utils/format'
 import styles from '../../pages/GamePage.module.css'
 
-export default function LevelOverlay({ overlay, levelIdx, totalLevels, onNext, onRetry, onSelect, onProfile }) {
+export default function LevelOverlay({ overlay, levelIdx, totalLevels, gateNeeded, onNext, onRetry, onSelect, onProfile }) {
   const isLast = levelIdx >= totalLevels - 1
   return (
     <div className={styles.overlay}>
@@ -14,12 +14,18 @@ export default function LevelOverlay({ overlay, levelIdx, totalLevels, onNext, o
         <p className={styles.overlaySub}>
           {overlay.passed
             ? isLast
-              ? 'You have completed all 20 levels. Extraordinary!'
-              : `Completed in ${formatTime(overlay.time)}. On to Level ${levelIdx + 2}!`
+              ? 'You have completed all 25 levels. Extraordinary!'
+              : gateNeeded
+                ? `Completed in ${formatTime(overlay.time)}. Attempt the Level Gate to unlock Level ${levelIdx + 2}!`
+                : `Completed in ${formatTime(overlay.time)}. On to Level ${levelIdx + 2}!`
             : `You need 9/10 to advance. Time: ${formatTime(overlay.time)}`}
         </p>
         <div className={styles.overlayBtns}>
-          {overlay.passed && !isLast && <button className={styles.overlayBtn} onClick={onNext}>Next Level →</button>}
+          {overlay.passed && !isLast && (
+            <button className={styles.overlayBtn} onClick={onNext}>
+              {gateNeeded ? 'Attempt Level Gate 🔑' : 'Next Level →'}
+            </button>
+          )}
           {overlay.passed && isLast && <button className={styles.overlayBtn} onClick={onProfile}>View Profile</button>}
           {!overlay.passed && <button className={styles.overlayBtn} onClick={onRetry}>Try Again</button>}
           <button className={styles.overlayBtnSecondary} onClick={onSelect}>← All Levels</button>
