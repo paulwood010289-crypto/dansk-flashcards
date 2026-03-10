@@ -15,7 +15,11 @@ export function AuthProvider({ children }) {
       else setLoading(false)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // Skip INITIAL_SESSION — already handled by getSession() above.
+      // Without this guard, both run fetchProfile concurrently and the second
+      // call can overwrite a valid profile with null if it loses the race.
+      if (event === 'INITIAL_SESSION') return
       setUser(session?.user ?? null)
       if (session?.user) fetchProfile(session.user.id)
       else { setProfile(null); setLoading(false) }
@@ -25,11 +29,18 @@ export function AuthProvider({ children }) {
   }, [])
 
   async function fetchProfile(userId) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single()
+    // PGRST116 = "no rows found" — the user genuinely has no profile yet.
+    // Any other error (RLS, network, etc.) should not redirect an existing
+    // user to /setup by incorrectly setting profile to null.
+    if (error && error.code !== 'PGRST116') {
+      setLoading(false)
+      return
+    }
     setProfile(data)
     setLoading(false)
   }
