@@ -1,13 +1,19 @@
 import Nav from '../components/Nav'
 import { useAuth } from '../hooks/useAuth'
+import { useLanguage } from '../context/LanguageContext'
 import { useProgress } from '../hooks/useProgress'
 import { formatTime, formatDate } from '../utils/format'
 import styles from './ProfilePage.module.css'
 import { LEVELS } from '../data/levels'
+import { LEVELS_ES } from '../data/levels_es'
 
 export default function ProfilePage() {
   const { profile } = useAuth()
-  const { progress, history, loading } = useProgress()
+  const { language } = useLanguage()
+  const { progress, history, loading } = useProgress(language)
+
+  const ACTIVE_LEVELS = language === 'spanish' ? LEVELS_ES : LEVELS
+  const langLabel = language === 'spanish' ? '🇪🇸 Spanish' : '🇩🇰 Danish'
 
   if (loading) return <div className={styles.loading}>Loading…</div>
 
@@ -31,7 +37,7 @@ export default function ProfilePage() {
           <div className={styles.avatar}>{profile?.username?.[0]?.toUpperCase() ?? '?'}</div>
           <div>
             <h1 className={styles.username}>{profile?.username}</h1>
-            <p className={styles.sub}>Level {progress?.highest_level ?? 1} reached · {LEVELS.length} total</p>
+            <p className={styles.sub}>Level {progress?.highest_level ?? 1} reached · {ACTIVE_LEVELS.length} total · {langLabel}</p>
           </div>
         </div>
 
@@ -56,7 +62,7 @@ export default function ProfilePage() {
               <div key={r.id} className={styles.tableRow}>
                 <span className={styles.levelCol}>
                   <span className={styles.levelNum}>{r.level}</span>
-                  <span className={styles.levelName}>{LEVELS[r.level - 1]?.name ?? ''}</span>
+                  <span className={styles.levelName}>{ACTIVE_LEVELS[r.level - 1]?.name ?? ''}</span>
                 </span>
                 <span className={styles.scoreCol}>
                   <span className={[styles.scoreBadge, r.passed ? styles.scoreBadgePass : styles.scoreBadgeFail].join(' ')}>

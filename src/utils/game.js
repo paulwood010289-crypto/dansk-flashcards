@@ -1,4 +1,12 @@
 import { LEVELS, SEQUENCES, ODD_ONE_OUTS, ALL_SINGLE_ENGLISH, ALL_TWO_WORD_ENGLISH } from '../data/levels'
+import { LEVELS_ES, SEQUENCES_ES, ODD_ONE_OUTS_ES } from '../data/levels_es'
+
+export function getLevelData(language) {
+  if (language === 'spanish') {
+    return { levels: LEVELS_ES, sequences: SEQUENCES_ES, oddOneOuts: ODD_ONE_OUTS_ES }
+  }
+  return { levels: LEVELS, sequences: SEQUENCES, oddOneOuts: ODD_ONE_OUTS }
+}
 
 const VOWELS = ['a', 'e', 'i', 'o', 'u', 'y', 'æ', 'ø', 'å']
 const CONSONANTS = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v']
@@ -56,10 +64,11 @@ export function generateChoices(card, optCount, seenAnswers = new Set()) {
   return []
 }
 
-export function buildDeck(levelIdx) {
-  const level = LEVELS[levelIdx]
-  const seq = { type: 'sequence', ...SEQUENCES[levelIdx] }
-  const odd = { type: 'oddone', ...ODD_ONE_OUTS[levelIdx] }
+export function buildDeck(levelIdx, language = 'danish') {
+  const { levels, sequences, oddOneOuts } = getLevelData(language)
+  const level = levels[levelIdx]
+  const seq = { type: 'sequence', ...sequences[levelIdx] }
+  const odd = { type: 'oddone', ...oddOneOuts[levelIdx] }
   const base = shuffle([...level.cards])
   base.splice(3, 0, seq)
   base.splice(7, 0, odd)

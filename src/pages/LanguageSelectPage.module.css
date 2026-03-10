@@ -1,0 +1,165 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  background: #f5f0e8;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 20%, #e8d5b0 0%, transparent 50%),
+    radial-gradient(circle at 85% 80%, #c9dde8 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.8rem;
+  text-align: center;
+  max-width: 680px;
+  width: 100%;
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #3a2e22;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #7a6a5a;
+  line-height: 1.65;
+  max-width: 440px;
+}
+
+.cards {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.langCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 2rem 1.8rem 1.5rem;
+  background: white;
+  border: 1.5px solid #e0d0b8;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+  box-shadow: 0 2px 10px rgba(90,74,58,0.08);
+  width: 260px;
+  font-family: inherit;
+  text-align: center;
+}
+
+.langCard:hover {
+  box-shadow: 0 8px 28px rgba(90,74,58,0.16);
+  transform: translateY(-3px);
+  border-color: #c0a880;
+}
+
+.flagEmoji {
+  font-size: 3.5rem;
+  line-height: 1;
+  animation: float 3s ease-in-out infinite;
+}
+
+.langCard:nth-child(2) .flagEmoji {
+  animation-delay: 0.5s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.langName {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #3a2e22;
+}
+
+.langNative {
+  font-size: 0.9rem;
+  color: #9a8a7a;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.stripes {
+  display: flex;
+  flex-direction: column;
+  width: 80px;
+  height: 50px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.stripeDanishRed {
+  flex: 1;
+  background: #c60c30;
+}
+
+.stripeDanishWhite {
+  height: 12px;
+  background: white;
+}
+
+.stripeSpanishRed {
+  flex: 1;
+  background: #c60b1e;
+}
+
+.stripeSpanishYellow {
+  flex: 2;
+  background: #ffc400;
+}
+
+.langDesc {
+  font-size: 0.84rem;
+  color: #7a6a5a;
+  line-height: 1.5;
+  max-width: 200px;
+}
+
+.startBtn {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #5a4a3a;
+  letter-spacing: 0.04em;
+  background: #f5eede;
+  padding: 0.45rem 1rem;
+  border-radius: 20px;
+  transition: background 0.15s;
+}
+
+.langCard:hover .startBtn {
+  background: #e8dcca;
+}
+
+.note {
+  font-size: 0.78rem;
+  color: #a09080;
+  letter-spacing: 0.03em;
+}

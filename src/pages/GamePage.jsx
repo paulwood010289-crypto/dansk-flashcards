@@ -5,18 +5,24 @@ import CardRenderer from '../components/game/CardRenderer'
 import LevelSelect from '../components/game/LevelSelect'
 import LevelOverlay from '../components/game/LevelOverlay'
 import DanishFlagBackground from '../components/game/DanishFlagBackground'
+import SpanishFlagBackground from '../components/game/SpanishFlagBackground'
 import { useAuth } from '../hooks/useAuth'
+import { useLanguage } from '../context/LanguageContext'
 import { useProgress } from '../hooks/useProgress'
 import { LEVELS } from '../data/levels'
+import { LEVELS_ES } from '../data/levels_es'
 import { TIER_THEMES } from '../data/themes'
-import { buildDeck, generateChoices } from '../utils/game'
+import { buildDeck, generateChoices, getLevelData } from '../utils/game'
 import { formatTime } from '../utils/format'
 import styles from './GamePage.module.css'
 
 export default function GamePage() {
   const { profile } = useAuth()
-  const { progress, saveRoundResult, loading: progressLoading } = useProgress()
+  const { language } = useLanguage()
+  const { progress, saveRoundResult, loading: progressLoading } = useProgress(language)
   const navigate = useNavigate()
+
+  const ACTIVE_LEVELS = language === 'spanish' ? LEVELS_ES : LEVELS
 
   const [levelIdx, setLevelIdx] = useState(null)
   const [roundKey, setRoundKey] = useState(1)
@@ -52,8 +58,8 @@ export default function GamePage() {
 
   function startLevel(idx, reshuffle = false) {
     const newDeck = reshuffle
-      ? deck.map(card => ({ ...card, _choices: generateChoices(card, LEVELS[idx].optionCount) }))
-      : buildDeck(idx)
+      ? deck.map(card => ({ ...card, _choices: generateChoices(card, ACTIVE_LEVELS[idx].optionCount) }))
+      : buildDeck(idx, language)
     setLevelIdx(idx)
     setRoundKey(k => k + 1)
     setDeck(newDeck)
@@ -66,7 +72,7 @@ export default function GamePage() {
     startTimer()
   }
 
-  const theme = TIER_THEMES[levelIdx !== null ? LEVELS[levelIdx].tier - 1 : 0]
+  const theme = TIER_THEMES[levelIdx !== null ? ACTIVE_LEVELS[levelIdx].tier - 1 : 0]
   const themeStyle = {
     '--accent': theme.accent,
     '--card': theme.card,
@@ -76,7 +82,7 @@ export default function GamePage() {
     '--lvl-bg': theme.bg,
   }
   const entry = deck[cardIdx]
-  const optCount = levelIdx !== null ? LEVELS[levelIdx].optionCount : 4
+  const optCount = levelIdx !== null ? ACTIVE_LEVELS[levelIdx].optionCount : 4
 
   function registerAnswer(correct) {
     setAnswered(true)
@@ -121,30 +127,32 @@ export default function GamePage() {
     }
   }
 
+  const FlagBackground = language === 'spanish' ? SpanishFlagBackground : DanishFlagBackground
+
   if (progressLoading) return <div className={styles.loading}>Loading…</div>
 
   if (levelIdx === null) {
     return (
       <div className={styles.pageWrapper} style={themeStyle}>
-        <DanishFlagBackground theme={theme} seed={roundKey} />
+        <FlagBackground theme={theme} seed={roundKey} />
         <Nav />
         <LevelSelect progress={progress} onSelect={idx => startLevel(idx)} />
       </div>
     )
   }
 
-  const level = LEVELS[levelIdx]
+  const level = ACTIVE_LEVELS[levelIdx]
   const pct = Math.round((cardIdx / 10) * 100)
 
   return (
     <div className={styles.pageWrapper} style={themeStyle}>
-      <DanishFlagBackground theme={theme} seed={roundKey} />
+      <FlagBackground theme={theme} seed={roundKey} />
       <Nav />
       {overlay && (
         <LevelOverlay
           overlay={overlay}
           levelIdx={levelIdx}
-          totalLevels={LEVELS.length}
+          totalLevels={ACTIVE_LEVELS.length}
           onNext={() => startLevel(levelIdx + 1)}
           onRetry={() => startLevel(levelIdx, true)}
           onSelect={() => { setLevelIdx(null); stopTimer() }}
