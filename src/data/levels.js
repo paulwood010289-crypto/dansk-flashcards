@@ -597,3 +597,183 @@ export const LEVELS = [
      distractors:["In religious belief alone","Through philosophical study","By escaping suffering","In community with others only","Through transcendence of the self","By accepting fate","In the rejection of pain","Through reason and logic","In the absence of doubt"]},
   ]},
 ]
+
+// ── LEVEL GATES (one per level, shown after passing round) ────────────
+// type "fill_blanks": user fills blanks in a pre-written sentence
+//   template: sentence with ___ placeholders (one per blank)
+//   blanks: correct answers in order (exact string to match)
+//   wordBank: all clickable tiles (includes blanks + distractors)
+// type "arrange": user arranges all shuffled words into correct sentence
+//   words: correct order of words (no punctuation tokens)
+//   display: full sentence shown as hint after success
+export const LEVEL_GATES = [
+  // Gate 1 — after Level 1 (Animals), unlocks Level 2
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish words to complete the sentences.",
+    hint:"A wolf lives in the forest. A bird flies in the air. A fish swims in the water. A horse is a large animal. A little rabbit hops.",
+    template:"En ___ bor i skoven. En ___ flyver i luften. En ___ svømmer i vandet. En ___ er et stort dyr. En lille ___ hopper.",
+    blanks:["ulv","fugl","fisk","hest","kanin"],
+    wordBank:["ulv","fugl","fisk","hest","kanin","hund","kat","ko"] },
+
+  // Gate 2 — after Level 2 (Body parts), unlocks Level 3
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish words to complete the sentences.",
+    hint:"I use my eye to see. I use my ear to hear. I eat with my mouth. I work with my hand. I run with my leg.",
+    template:"Jeg bruger mit ___ til at se. Jeg bruger mit ___ til at høre. Jeg spiser med min ___. Jeg arbejder med min ___. Jeg løber med mit ___.",
+    blanks:["øje","øre","mund","hånd","ben"],
+    wordBank:["øje","øre","mund","hånd","ben","hoved","arm","næse"] },
+
+  // Gate 3 — after Level 3 (Home & objects), unlocks Level 4
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish words to complete the sentences.",
+    hint:"A cat sits on a chair. We eat at a table. We read a book. A house is a place to live. A bird sits on a table.",
+    template:"En ___ sidder på en ___. Vi spiser ved et ___. Vi læser en ___. Et ___ er et sted at bo.",
+    blanks:["kat","stol","bord","bog","hus"],
+    wordBank:["kat","stol","bord","bog","hus","hund","fugl","øje"] },
+
+  // Gate 4 — after Level 4 (Nature), unlocks Level 5
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish words to complete the sentences.",
+    hint:"The sun shines during the day. The moon shines at night. A bird lives in the forest. A dog drinks from the river. A cat sleeps on a table.",
+    template:"___ skinner om dagen. ___ lyser om natten. En fugl bor i ___. En hund drikker fra ___. En kat sover på ___.",
+    blanks:["Sol","Måne","skov","flod","bord"],
+    wordBank:["Sol","Måne","skov","flod","bord","hus","stol","bog"] },
+
+  // Gate 5 — after Level 5 (Food & drink), unlocks Level 6
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish words to complete the sentences.",
+    hint:"I eat bread for breakfast. I drink water. A bird eats an apple. A cat sits at the table. Milk is good to drink.",
+    template:"Jeg spiser ___ til morgenmad. Jeg drikker ___. En fugl spiser et ___. En ___ sidder ved bordet. ___ er godt at drikke.",
+    blanks:["brød","vand","æble","kat","Mælk"],
+    wordBank:["brød","vand","æble","kat","Mælk","hund","sol","flod"] },
+
+  // Gate 6 — after Level 6 (Weather), unlocks Level 7
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish words to complete the sentences.",
+    hint:"In winter a lot of snow falls. A large cloud sails over the sky. Wind blows from the west. The lake is covered in ice. We warm ourselves by the fire. Without rain plants cannot grow.",
+    template:"Om vinteren falder der ___. En stor ___ sejler over himlen. ___ blæser fra vest. Søen er dækket af ___. Vi varmer os ved ___. Uden ___ kan planter ikke vokse.",
+    blanks:["sne","sky","vind","is","ild","regn"],
+    wordBank:["sne","sky","vind","is","ild","regn","sol","måne","brød","mælk"] },
+
+  // Gate 7 — after Level 7 (Adjectives), unlocks Level 8
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish adjectives to complete the sentences.",
+    hint:"An elephant is very big. A mouse is very small. The sun is warm in summer. Ice is cold. A bird is fast. An old tree is old.",
+    template:"En elefant er meget ___. En mus er meget ___. Solen er ___ om sommeren. Is er ___. En fugl er ___. Et gammelt træ er ___.",
+    blanks:["stor","lille","varm","kold","hurtig","gammel"],
+    wordBank:["stor","lille","varm","kold","hurtig","gammel","hund","fugl","sne","ild"] },
+
+  // Gate 8 — after Level 8 (Professions), unlocks Level 9
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish words to complete the sentences.",
+    hint:"A man and a woman live in the house. A doctor helps the sick. A writer writes stories. A cook makes food. A farmer grows grain.",
+    template:"En ___ og en ___ bor i huset. En ___ hjælper syge. En ___ skriver historier. En ___ laver mad. En ___ dyrker korn.",
+    blanks:["mand","kvinde","læge","forfatter","kok","bonde"],
+    wordBank:["mand","kvinde","læge","forfatter","kok","bonde","hund","fugl","regn","sol"] },
+
+  // Gate 9 — after Level 9 (Time), unlocks Level 10
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish time words to complete the sentences.",
+    hint:"In the morning the sun rises. During the day the sun shines. In the evening we eat dinner. At night we sleep.",
+    template:"Om ___ stiger solen op. Om ___ skinner solen. Om ___ spiser vi middag. Om ___ sover vi.",
+    blanks:["morgen","dag","aften","nat"],
+    wordBank:["morgen","dag","aften","nat","mand","kvinde","fugl","hus"] },
+
+  // Gate 10 — after Level 10 (Geography), unlocks Level 11
+  { type:"fill_blanks",
+    prompt:"Fill in the missing Danish words to complete the sentences.",
+    hint:"A sea is salty and deep. A mountain is high and snow-covered. A beach is lovely in summer. A valley is low and green. A bird flies over the forest.",
+    template:"Et ___ er salt og dybt. Et ___ er højt og snedækket. En ___ er dejlig om sommeren. En ___ er lav og grøn. En fugl flyver over ___.",
+    blanks:["hav","bjerg","strand","dal","skov"],
+    wordBank:["hav","bjerg","strand","dal","skov","flod","fugl","mand"] },
+
+  // Gate 11 — after Level 11 (Emotions I), unlocks Level 12
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Joy and hope are stronger than fear and grief.",
+    words:["Glæde","og","håb","er","stærkere","end","frygt","og","sorg"] },
+
+  // Gate 12 — after Level 12 (Emotions II), unlocks Level 13
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Love and peace conquer anger and loneliness.",
+    words:["Kærlighed","og","fred","vinder","over","vrede","og","ensomhed"] },
+
+  // Gate 13 — after Level 13 (Abstract I), unlocks Level 14
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Freedom and happiness await us in the future, not the past.",
+    words:["Frihed","og","lykke","venter","os","i","fremtiden","ikke","fortiden"] },
+
+  // Gate 14 — after Level 14 (Truth & trust), unlocks Level 15
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Truth and trust are stronger than lies and doubt.",
+    words:["Sandhed","og","tillid","er","stærkere","end","løgn","og","tvivl"] },
+
+  // Gate 15 — after Level 15 (Nature & culture), unlocks Level 16
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Nature and culture shape a society's long history.",
+    words:["Natur","og","kultur","former","et","samfunds","lange","historie"] },
+
+  // Gate 16 — after Level 16 (Consciousness), unlocks Level 17
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Curiosity and patience lead to deeper consciousness and understanding.",
+    words:["Nysgerrighed","og","tålmodighed","fører","til","dybere","bevidsthed","og","forståelse"] },
+
+  // Gate 17 — after Level 17 (Courage & fate), unlocks Level 18
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Courage and humility help us to meet our fate.",
+    words:["Mod","og","ydmyghed","hjælper","os","med","at","møde","vores","skæbne"] },
+
+  // Gate 18 — after Level 18 (Melancholy & longing), unlocks Level 19
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Deep longing and melancholy can feel overwhelming to reason.",
+    words:["Dyb","længsel","og","vemod","kan","føles","overvældende","for","fornuften"] },
+
+  // Gate 19 — after Level 19 (Philosophical abstractions), unlocks Level 20
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Insight arises in connection with ambiguity and complexity.",
+    words:["Erkendelse","opstår","i","sammenhæng","med","tvetydighed","og","kompleksitet"] },
+
+  // Gate 20 — after Level 20 (Danish cultural concepts), unlocks Level 21
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Hygge and the common-people spirit are central parts of Danish character formation.",
+    words:["Hygge","og","folkelighed","er","centrale","dele","af","dansk","dannelse"] },
+
+  // Gate 21 — after Level 21 (Language & narrative), unlocks Level 22
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"A language is full of metaphors, symbols and narratives.",
+    words:["Et","sprog","er","fyldt","med","metaforer","symboler","og","fortællinger"] },
+
+  // Gate 22 — after Level 22 (Justice & democracy), unlocks Level 23
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Democracy requires freedom of speech, equality and justice for all.",
+    words:["Demokrati","kræver","ytringsfrihed","lighed","og","retfærdighed","for","alle"] },
+
+  // Gate 23 — after Level 23 (Psychology & self), unlocks Level 24
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Self-awareness and empathy help us to understand angst and identity.",
+    words:["Selvbevidsthed","og","empati","hjælper","os","med","at","forstå","angst","og","identitet"] },
+
+  // Gate 24 — after Level 24 (Danish welfare), unlocks Level 25
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Solidarity and community create security and welfare for all.",
+    words:["Solidaritet","og","fællesskab","skaber","tryghed","og","velfærd","for","alle"] },
+
+  // Gate 25 — after Level 25 (Transcendence), unlocks course completion
+  { type:"arrange",
+    prompt:"Arrange the Danish words to form a correct sentence.",
+    hint:"Self-transcendence and rootedness lead to meaningfulness and transcendence.",
+    words:["Selvoverskridelse","og","forankring","fører","til","meningsfuldhed","og","transcendens"] },
+]
