@@ -1,13 +1,3 @@
-// NOTE: The Supabase database requires these schema changes to support multi-language:
-//
-// ALTER TABLE user_progress ADD COLUMN IF NOT EXISTS language TEXT DEFAULT 'danish';
-// ALTER TABLE user_progress ADD CONSTRAINT user_progress_user_language_key UNIQUE (user_id, language);
-// -- (Drop old single-PK constraint on user_id if it exists)
-//
-// ALTER TABLE round_results ADD COLUMN IF NOT EXISTS language TEXT DEFAULT 'danish';
-//
-// The leaderboard view should be updated to include the language column and allow filtering.
-
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from './useAuth'
@@ -34,32 +24,29 @@ export function useProgress(language = 'danish') {
     setLoading(false)
   }
 
-  // Gate tracking via localStorage (keyed by user id)
+  // Gate tracking via localStorage (keyed by user id + language)
   function _getStoredGates() {
     try {
-      return JSON.parse(localStorage.getItem(`gates_${user.id}`)) || []
+      return JSON.parse(localStorage.getItem(`gates_${user.id}_${language}`)) || []
     } catch { return [] }
   }
 
-  // A gate is "passed" if the user has explicitly completed it OR if
-  // their highest_level has already advanced past it (grandfathering).
-  // levelIdx is 0-based (gate for level 1 = levelIdx 0).
+  // A gate is "passed" if highest_level has already advanced past it, or explicitly completed.
   function isGatePassed(levelIdx) {
     if ((progress?.highest_level ?? 1) >= levelIdx + 2) return true
     return _getStoredGates().includes(levelIdx)
   }
 
-  // Called when the user successfully completes a gate challenge.
   async function markGatePassed(levelIdx) {
     const gates = _getStoredGates()
     if (!gates.includes(levelIdx)) {
-      localStorage.setItem(`gates_${user.id}`, JSON.stringify([...gates, levelIdx]))
+      localStorage.setItem(`gates_${user.id}_${language}`, JSON.stringify([...gates, levelIdx]))
     }
     const newHighest = Math.max(progress?.highest_level ?? 1, levelIdx + 2)
     const newCurrent = levelIdx + 2
     const { data } = await supabase
       .from('user_progress')
-      .upsert({ user_id: user.id, highest_level: newHighest, current_level: newCurrent, updated_at: new Date().toISOString() })
+      .upsert({ user_id: user.id, language, highest_level: newHighest, current_level: newCurrent, updated_at: new Date().toISOString() })
       .select()
       .single()
     if (data) setProgress(data)
@@ -75,15 +62,25 @@ export function useProgress(language = 'danish') {
       duration_secs: durationSecs,
     })
 
-    // NOTE: highest_level is now advanced by markGatePassed (gate system).
-    // We still update current_level so the level select indicator stays accurate.
     if (passed) {
-      await supabase
-        .from('user_progress')
-        .upsert({ user_id: user.id, language, highest_level: newHighest, current_level: newCurrent, updated_at: new Date().toISOString() })
-        .select()
-        .single()
-      setProgress(data)
+      if (language === 'danish') {
+        // For Danish, highest_level is advanced by markGatePassed (gate system).
+        // Only update current_level here so the level select indicator stays accurate.
+        await supabase
+          .from('user_progress')
+          .upsert({ user_id: user.id, language, current_level: level, updated_at: new Date().toISOString() })
+        setProgress(prev => (prev ? { ...prev, current_level: level } : prev))
+      } else {
+        // For Spanish (no gates), advance highest_level directly.
+        const newHighest = Math.max(progress?.highest_level ?? 1, level + 1)
+        const newCurrent = level + 1
+        const { data } = await supabase
+          .from('user_progress')
+          .upsert({ user_id: user.id, language, highest_level: newHighest, current_level: newCurrent, updated_at: new Date().toISOString() })
+          .select()
+          .single()
+        setProgress(data)
+      }
     }
 
     const { data: hist } = await supabase
