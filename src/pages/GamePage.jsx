@@ -4,6 +4,8 @@ import Nav from '../components/Nav'
 import CardRenderer from '../components/game/CardRenderer'
 import LevelSelect from '../components/game/LevelSelect'
 import LevelOverlay from '../components/game/LevelOverlay'
+import GateChallenge from '../components/game/GateChallenge'
+import Fireworks from '../components/game/Fireworks'
 import DanishFlagBackground from '../components/game/DanishFlagBackground'
 import SpanishFlagBackground from '../components/game/SpanishFlagBackground'
 import { useAuth } from '../hooks/useAuth'
@@ -33,6 +35,10 @@ export default function GamePage() {
   const [pipResults, setPipResults] = useState([])
   const [overlay, setOverlay] = useState(null)
   const [seqPlaced, setSeqPlaced] = useState([])
+
+  // Gate state
+  const [showGate, setShowGate] = useState(false)
+  const [gateUnlocked, setGateUnlocked] = useState(false) // fireworks after gate pass
 
   // Timer — uses ref so ticking never causes re-render
   const [displayTime, setDisplayTime] = useState('0:00')
@@ -69,6 +75,8 @@ export default function GamePage() {
     setResult(null)
     setOverlay(null)
     setSeqPlaced([])
+    setShowGate(false)
+    setGateUnlocked(false)
     startTimer()
   }
 
@@ -136,19 +144,54 @@ export default function GamePage() {
       <div className={styles.pageWrapper} style={themeStyle}>
         <FlagBackground theme={theme} seed={roundKey} />
         <Nav />
-        <LevelSelect progress={progress} onSelect={idx => startLevel(idx)} />
+        <LevelSelect
+          progress={progress}
+          isGatePassed={isGatePassed}
+          onSelect={idx => startLevel(idx)}
+        />
       </div>
     )
   }
 
   const level = ACTIVE_LEVELS[levelIdx]
   const pct = Math.round((cardIdx / 10) * 100)
+  const isLastLevel = levelIdx >= LEVELS.length - 1
 
   return (
     <div className={styles.pageWrapper} style={themeStyle}>
       <FlagBackground theme={theme} seed={roundKey} />
       <Nav />
-      {overlay && (
+
+      {/* Fireworks celebration after gate pass */}
+      {gateUnlocked && (
+        <>
+          <Fireworks duration={2500} />
+          <div className={styles.overlay}>
+            <div className={styles.overlayBox}>
+              <div className={styles.overlayIcon}>🎉</div>
+              <h2 className={styles.overlayTitle}>Level Unlocked!</h2>
+              <div className={[styles.overlayScore, styles.overlayScorePass].join(' ')}>
+                Level {levelIdx + 2}
+              </div>
+              <p className={styles.overlaySub}>Gate cleared! Advancing to the next level…</p>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Gate challenge */}
+      {showGate && LEVEL_GATES[levelIdx] && (
+        <GateChallenge
+          gate={LEVEL_GATES[levelIdx]}
+          levelNum={levelIdx + 1}
+          theme={theme}
+          onPass={handleGatePass}
+          onBack={() => { setShowGate(false); setLevelIdx(null); stopTimer() }}
+        />
+      )}
+
+      {/* Round result overlay */}
+      {overlay && !showGate && !gateUnlocked && (
         <LevelOverlay
           overlay={overlay}
           levelIdx={levelIdx}
@@ -159,6 +202,7 @@ export default function GamePage() {
           onProfile={() => navigate('/profile')}
         />
       )}
+
       <div className={styles.gameArea}>
         <div className={styles.gameHeader}>
           <div className={styles.levelInfo}>

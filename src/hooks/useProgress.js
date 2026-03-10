@@ -34,6 +34,37 @@ export function useProgress(language = 'danish') {
     setLoading(false)
   }
 
+  // Gate tracking via localStorage (keyed by user id)
+  function _getStoredGates() {
+    try {
+      return JSON.parse(localStorage.getItem(`gates_${user.id}`)) || []
+    } catch { return [] }
+  }
+
+  // A gate is "passed" if the user has explicitly completed it OR if
+  // their highest_level has already advanced past it (grandfathering).
+  // levelIdx is 0-based (gate for level 1 = levelIdx 0).
+  function isGatePassed(levelIdx) {
+    if ((progress?.highest_level ?? 1) >= levelIdx + 2) return true
+    return _getStoredGates().includes(levelIdx)
+  }
+
+  // Called when the user successfully completes a gate challenge.
+  async function markGatePassed(levelIdx) {
+    const gates = _getStoredGates()
+    if (!gates.includes(levelIdx)) {
+      localStorage.setItem(`gates_${user.id}`, JSON.stringify([...gates, levelIdx]))
+    }
+    const newHighest = Math.max(progress?.highest_level ?? 1, levelIdx + 2)
+    const newCurrent = levelIdx + 2
+    const { data } = await supabase
+      .from('user_progress')
+      .upsert({ user_id: user.id, highest_level: newHighest, current_level: newCurrent, updated_at: new Date().toISOString() })
+      .select()
+      .single()
+    if (data) setProgress(data)
+  }
+
   async function saveRoundResult({ level, score, passed, durationSecs }) {
     await supabase.from('round_results').insert({
       user_id: user.id,
@@ -44,10 +75,10 @@ export function useProgress(language = 'danish') {
       duration_secs: durationSecs,
     })
 
+    // NOTE: highest_level is now advanced by markGatePassed (gate system).
+    // We still update current_level so the level select indicator stays accurate.
     if (passed) {
-      const newHighest = Math.max(progress?.highest_level ?? 1, level + 1)
-      const newCurrent = level + 1
-      const { data } = await supabase
+      await supabase
         .from('user_progress')
         .upsert({ user_id: user.id, language, highest_level: newHighest, current_level: newCurrent, updated_at: new Date().toISOString() })
         .select()
@@ -72,5 +103,5 @@ export function useProgress(language = 'danish') {
     setProgress(prev => ({ ...prev, current_level: level }))
   }
 
-  return { progress, history, loading, saveRoundResult, setCurrentLevel, reload: loadProgress }
+  return { progress, history, loading, saveRoundResult, setCurrentLevel, isGatePassed, markGatePassed, reload: loadProgress }
 }
