@@ -14,7 +14,7 @@ function buildFeedback(entry, result) {
     }
     return {
       headline: 'Not quite!',
-      detail: `"${entry.danish}" means "${entry.english}" — not "${chosen}".`,
+      detail: `You chose "${chosen}" — but "${entry.danish}" means "${entry.english}" in English.`,
     }
   }
 
@@ -24,12 +24,12 @@ function buildFeedback(entry, result) {
     if (correct) {
       return {
         headline: 'Correct!',
-        detail: `The missing letter was "${hidden.toUpperCase()}". The full word is "${fullWord}".`,
+        detail: `"${hidden.toUpperCase()}" is the missing letter. The full word is "${fullWord}".`,
       }
     }
     return {
       headline: 'Not quite!',
-      detail: `The missing letter was "${hidden.toUpperCase()}", not "${chosen.toUpperCase()}". The complete word is "${fullWord}".`,
+      detail: `You chose "${chosen.toUpperCase()}" — the missing letter is "${hidden.toUpperCase()}", making the word "${fullWord}".`,
     }
   }
 
@@ -43,7 +43,7 @@ function buildFeedback(entry, result) {
     }
     return {
       headline: 'Not quite!',
-      detail: `The missing word was "${entry.blank}", not "${chosen}". Full sentence: ${filled}`,
+      detail: `You chose "${chosen}" — the missing word is "${entry.blank}". Full sentence: ${filled}`,
     }
   }
 
@@ -56,7 +56,7 @@ function buildFeedback(entry, result) {
     }
     return {
       headline: 'Not quite!',
-      detail: `The answer was "${entry.answer}", not "${chosen}". Re-read the passage to find the supporting detail.`,
+      detail: `You chose "${chosen}" — the correct answer is "${entry.answer}". Look back at the passage for the supporting detail.`,
     }
   }
 
@@ -70,7 +70,7 @@ function buildFeedback(entry, result) {
     }
     return {
       headline: 'Wrong order!',
-      detail: `Correct sequence: ${correctOrder}\nYour order: ${result.chosen}`,
+      detail: `Your order: ${result.chosen}\nCorrect order: ${correctOrder}`,
     }
   }
 
@@ -83,7 +83,7 @@ function buildFeedback(entry, result) {
     }
     return {
       headline: 'Not quite!',
-      detail: `The odd one out was "${entry.oddOne}", not "${chosen}".${entry.explanation ? ` ${entry.explanation}` : ''}`,
+      detail: `You chose "${chosen}" — but that fits with the group. "${entry.oddOne}" is the odd one out.${entry.explanation ? ` ${entry.explanation}` : ''}`,
     }
   }
 
