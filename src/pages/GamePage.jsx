@@ -6,6 +6,7 @@ import LevelSelect from '../components/game/LevelSelect'
 import LevelOverlay from '../components/game/LevelOverlay'
 import GateChallenge from '../components/game/GateChallenge'
 import Fireworks from '../components/game/Fireworks'
+import FeedbackPanel from '../components/game/FeedbackPanel'
 import DanishFlagBackground from '../components/game/DanishFlagBackground'
 import SpanishFlagBackground from '../components/game/SpanishFlagBackground'
 import { useAuth } from '../hooks/useAuth'
@@ -275,25 +276,14 @@ export default function GamePage() {
           />
         )}
 
-        {answered && (
-          <>
-            <p className={[styles.resultMsg, result?.correct ? styles.correct : styles.wrong].join(' ')}>
-              {result?.correct
-                ? '✓ Correct!'
-                : entry?.type === 'sequence'
-                  ? `✗ Correct order: ${result?.correctAnswer}`
-                  : entry?.type === 'oddone'
-                    ? `✗ Odd one out: ${result?.correctAnswer}`
-                    : `✗ Answer: ${result?.correctAnswer}`}
-            </p>
-            {entry?.type === 'oddone' && result?.explanation && (
-              <p className={styles.explanation}>{result.explanation}</p>
-            )}
-            <button className={styles.nextBtn} style={{ background: theme.accent }} onClick={nextCard}>
-              {cardIdx >= 9 ? 'Finish →' : 'Next →'}
-            </button>
-          </>
-        )}
+        <FeedbackPanel
+          entry={entry}
+          result={result}
+          answered={answered}
+          cardIdx={cardIdx}
+          onNext={nextCard}
+          theme={theme}
+        />
       </div>
     </div>
   )
