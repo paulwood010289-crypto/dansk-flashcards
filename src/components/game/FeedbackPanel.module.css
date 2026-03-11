@@ -1,0 +1,140 @@
+/* ── Feedback panel — slides in from the right on desktop, up from the bottom on mobile ── */
+
+.panel {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%) translateX(110%);
+  width: 300px;
+  border-radius: 16px 0 0 16px;
+  padding: 1.6rem 1.4rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 60;
+  box-shadow: -6px 0 32px rgba(0, 0, 0, 0.18);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.panelVisible {
+  transform: translateY(-50%) translateX(0);
+}
+
+.panelClosing {
+  transform: translateY(-50%) translateX(110%);
+}
+
+/* Colour skins */
+.panelCorrect {
+  background: #eaf5ef;
+  border: 1.5px solid #a8d4b8;
+  border-right: none;
+}
+
+.panelWrong {
+  background: #fdf3f3;
+  border: 1.5px solid #e0a0a0;
+  border-right: none;
+}
+
+/* Header row */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.panelCorrect .icon {
+  background: #3a7d5a;
+  color: #fff;
+}
+
+.panelWrong .icon {
+  background: #b84040;
+  color: #fff;
+}
+
+.headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.panelCorrect .headline { color: #2d6147; }
+.panelWrong .headline { color: #8f2e2e; }
+
+/* Detail text */
+.detail {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.panelCorrect .detail { color: #2a4a39; }
+.panelWrong .detail { color: #5a2e2e; }
+
+/* Next button */
+.nextBtn {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 10px;
+  color: #f5f0e8;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  margin-top: 0.25rem;
+}
+
+.nextBtn:hover {
+  opacity: 0.85;
+}
+
+/* ── Mobile: slide up from the bottom ── */
+@media (max-width: 800px) {
+  .panel {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+    border-right: 1.5px solid;
+    transform: translateY(110%);
+    padding: 1.4rem 1.2rem 1.8rem;
+    box-shadow: 0 -6px 32px rgba(0, 0, 0, 0.16);
+  }
+
+  .panelCorrect {
+    border-color: #a8d4b8;
+  }
+
+  .panelWrong {
+    border-color: #e0a0a0;
+  }
+
+  .panelVisible {
+    transform: translateY(0);
+  }
+
+  .panelClosing {
+    transform: translateY(110%);
+  }
+}
